@@ -5,16 +5,16 @@
     "description": "A restaurant platform that allows people create and manage their restaurant online  ",
     "image": "https://image2url.com/r2/bucket2/images/1767956389883-9e22ff3b-1caf-42c4-a084-42d0e940b8e6.png",
     "tags": ["Node.js", "React","Supabase","Tailwind CSS"],
-    "github": "#",
-    "demo": "#"
+    "github": "https://github.com/danielnero-bot/quick-plate",
+    "demo": "https://quick-plate.vercel.app/"
   },
   {
     "id": 3,
     "title": "Typing Speed Test",
     "description": "A simple typing speed test app built with React and Node.js.",
     "image": "https://image2url.com/r2/bucket2/images/1767957091068-714f5f60-f3b7-437a-9f77-9e44bc3bf1f2.png",
-    "tags": ["React", "Node.js", "MongoDB"],
-    "github": "#",
-    "demo": "#"
+    "tags": ["React", "Node.js", "MongoDB","Tailwind CSS"],
+    "github": "https://github.com/danielnero-bot/bug-free-carnival",
+    "demo": "https://danielnero-bot.github.io/bug-free-carnival/"
   }
 ]
