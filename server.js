@@ -23,17 +23,49 @@ app.get('/api/projects', (req, res) => {
     });
 });
 
-app.post('/api/contact', (req, res) => {
+app.post('/api/contact', async (req, res) => {
     const { name, email, message } = req.body;
     
     if (!name || !email || !message) {
         return res.status(400).json({ error: 'Please provide all fields' });
     }
 
-    // In a real application, you would send an email here or save to a database.
     console.log(`Received contact form from ${name} (${email}): ${message}`);
     
-    // Simulating message storage
+    // 1. Prepare data for Discord Webhook
+    const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
+    
+    if (discordWebhookUrl) {
+        try {
+            // Using a dynamic import for fetch if using Node 18+ or requiring it if installed
+            // For universal compatibility, we'll try to use the built-in fetch if available
+            const fetch = global.fetch || require('node-fetch');
+            
+            await fetch(discordWebhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    embeds: [{
+                        title: "📧 New Portfolio Message",
+                        color: 3447003, // Blue
+                        fields: [
+                            { name: "Name", value: name, inline: true },
+                            { name: "Email", value: email, inline: true },
+                            { name: "Message", value: message }
+                        ],
+                        timestamp: new Date().toISOString()
+                    }]
+                })
+            });
+            console.log("Notification sent to Discord.");
+        } catch (discordError) {
+            console.error("Failed to send Discord notification:", discordError.message);
+        }
+    } else {
+        console.warn("DISCORD_WEBHOOK_URL not found in environment variables.");
+    }
+
+    // 2. Fallback: Simulating message storage (may not persist on Render)
     const messageData = {
         name,
         email,
@@ -43,14 +75,17 @@ app.post('/api/contact', (req, res) => {
 
     const messagesPath = path.join(__dirname, 'data', 'messages.json');
     
-    let messages = [];
-    if (fs.existsSync(messagesPath)) {
-        const fileData = fs.readFileSync(messagesPath, 'utf8');
-        messages = JSON.parse(fileData);
+    try {
+        let messages = [];
+        if (fs.existsSync(messagesPath)) {
+            const fileData = fs.readFileSync(messagesPath, 'utf8');
+            messages = JSON.parse(fileData);
+        }
+        messages.push(messageData);
+        fs.writeFileSync(messagesPath, JSON.stringify(messages, null, 2));
+    } catch (fsError) {
+        console.error("Local file save failed (expected on some hosts):", fsError.message);
     }
-    
-    messages.push(messageData);
-    fs.writeFileSync(messagesPath, JSON.stringify(messages, null, 2));
 
     res.status(200).json({ success: true, message: 'Message received! Thank you for reaching out.' });
 });
