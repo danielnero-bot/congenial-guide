@@ -25,6 +25,27 @@
             --accent-color: #007cf0;
             --card-bg: rgba(23, 23, 23, 0.6);
             --border-color: rgba(255, 255, 255, 0.1);
+            --header-bg: rgba(10, 10, 10, 0.8);
+            --mobile-menu-bg: rgba(0, 0, 0, 0.9);
+            --input-bg: #111827;
+            --input-border: #1f2937;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f8fafc;
+            --primary-color: #0f172a;
+            --secondary-color: #475569;
+            --accent-color: #2563eb;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --header-bg: rgba(248, 250, 252, 0.8);
+            --mobile-menu-bg: rgba(255, 255, 255, 0.9);
+            --input-bg: #ffffff;
+            --input-border: #e2e8f0;
+        }
+
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         body {
@@ -144,11 +165,56 @@
         
         /* Header scroll effect */
         .header-scrolled {
-            background: rgba(10, 10, 10, 0.8);
+            background: var(--header-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
         }
+
+        
+
+        /* Advanced Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.17, 0.55, 0.55, 1);
+        }
+
+        .reveal-up { transform: translateY(50px); }
+        .reveal-down { transform: translateY(-50px); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+        .reveal-scale { transform: scale(0.9); }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translate(0, 0) scale(1);
+        }
+
+        /* Staggered Children */
+        .reveal-stagger > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.17, 0.55, 0.55, 1);
+        }
+
+        .reveal-stagger.active > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Add delays to staggered children */
+        .reveal-stagger.active > *:nth-child(1) { transition-delay: 0.1s; }
+        .reveal-stagger.active > *:nth-child(2) { transition-delay: 0.2s; }
+        .reveal-stagger.active > *:nth-child(3) { transition-delay: 0.3s; }
+        .reveal-stagger.active > *:nth-child(4) { transition-delay: 0.4s; }
+        .reveal-stagger.active > *:nth-child(5) { transition-delay: 0.5s; }
+        .reveal-stagger.active > *:nth-child(6) { transition-delay: 0.6s; }
+        .reveal-stagger.active > *:nth-child(7) { transition-delay: 0.7s; }
+        .reveal-stagger.active > *:nth-child(8) { transition-delay: 0.8s; }
+        .reveal-stagger.active > *:nth-child(9) { transition-delay: 0.9s; }
+        .reveal-stagger.active > *:nth-child(10) { transition-delay: 1.0s; }
+        .reveal-stagger.active > *:nth-child(11) { transition-delay: 1.1s; }
+        .reveal-stagger.active > *:nth-child(12) { transition-delay: 1.2s; }
 
         /* Active Nav Link */
         .nav-link.active {
@@ -156,55 +222,86 @@
             font-weight: 600;
         }
 
-        /* ===== Custom Animated Cursor ===== */
-#cursor,
-#cursor-follower {
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    border-radius: 9999px;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
+        /* ===== Custom Animated Cursor (Desktop Only) ===== */
+@media (hover: hover) and (pointer: fine) {
+    #cursor,
+    #cursor-follower {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        border-radius: 9999px;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        display: block;
+    }
+
+    /* Main dot */
+    #cursor {
+        width: 8px;
+        height: 8px;
+        background-color: var(--accent-color);
+    }
+
+    /* Follower ring */
+    #cursor-follower {
+        width: 36px;
+        height: 36px;
+        border: 2px solid var(--accent-color);
+        opacity: 0.4;
+        transition:
+            transform 0.15s ease-out,
+            width 0.2s ease,
+            height 0.2s ease,
+            opacity 0.2s ease,
+            border-color 0.2s ease;
+    }
+
+    /* Hide default cursor */
+    body {
+        cursor: none;
+    }
+
+    /* Hover interaction */
+    a:hover ~ #cursor-follower,
+    button:hover ~ #cursor-follower,
+    [role="button"]:hover ~ #cursor-follower,
+    input[type="submit"]:hover ~ #cursor-follower {
+        width: 60px;
+        height: 60px;
+        opacity: 0.8;
+        background: rgba(0, 124, 240, 0.1);
+        border-width: 1px;
+    }
+
+    /* Small dot also reacts */
+    a:hover ~ #cursor,
+    button:hover ~ #cursor {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0.5;
+    }
+
+    /* Hover interaction via JS Classes */
+    #cursor-follower.cursor-hover {
+        width: 70px;
+        height: 70px;
+        opacity: 0.6;
+        background: rgba(0, 124, 240, 0.1);
+        border-color: var(--accent-color);
+        border-width: 1px;
+    }
+
+    #cursor.cursor-hover {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0.3;
+    }
 }
 
-/* Main dot */
-#cursor {
-    width: 8px;
-    height: 8px;
-    background-color: var(--accent-color);
-}
-
-/* Follower ring */
-#cursor-follower {
-    width: 36px;
-    height: 36px;
-    border: 2px solid var(--accent-color);
-    opacity: 0.4;
-    transition:
-        transform 0.15s ease-out,
-        width 0.2s ease,
-        height 0.2s ease,
-        opacity 0.2s ease,
-        border-color 0.2s ease;
-}
-
-/* Hide default cursor */
-body {
-    cursor: none;
-}
-
-/* Hover interaction */
-a:hover ~ #cursor-follower,
-button:hover ~ #cursor-follower {
-    width: 56px;
-    height: 56px;
-    opacity: 0.8;
-}
-
-/* Optional: text hover feel */
-p:hover ~ #cursor-follower {
-    opacity: 0.2;
+/* Hide cursor elements by default (for mobile) */
+@media screen and (max-width:600px) {
+    #cursor, #cursor-follower {
+        display: none;
+    }
 }
     /* ===== Intro Modal ===== */
 #intro-modal {
@@ -340,6 +437,9 @@ p:hover ~ #cursor-follower {
         );
         transition: all 0.6s ease;
     }
+    .scale{
+        cursor: none;
+    }
 
     .cta-button:hover::before {
         left: 100%;
@@ -348,12 +448,147 @@ p:hover ~ #cursor-follower {
     .cta-button:hover {
         letter-spacing: 1px;
     }
+
+    /* Success Button Animation */
+    .btn-success {
+        background-color: #22c55e !important;
+        box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4) !important;
+    }
+
+    @keyframes fly-away {
+        0% { transform: translate(0, 0) scale(1); opacity: 1; }
+        20% { transform: translate(-10px, 5px) scale(0.9); opacity: 1; }
+        100% { transform: translate(100px, -100px) scale(0) rotate(45deg); opacity: 0; }
+    }
+
+    .fly {
+        animation: fly-away 0.8s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes success-pop {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .pop {
+        animation: success-pop 0.4s ease-out;
+    }
+
+    /* Form success feedback */
+    .form-success-overlay {
+        position: absolute;
+        inset: 0;
+        background: var(--card-bg);
+        backdrop-filter: blur(20px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+        border-radius: inherit;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+    }
+
+    .form-success-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .checkmark-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #22c55e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        transform: scale(0);
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s;
+    }
+
+    .form-success-overlay.active .checkmark-circle {
+        transform: scale(1);
+    }
+
+    .checkmark-circle i {
+        color: white;
+        font-size: 40px;
+    }
+    .theme-toggle {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        color: var(--primary-color);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .theme-toggle:hover {
+        border-color: var(--accent-color);
+        transform: scale(1.1);
+    }
+
+    .theme-toggle i {
+        font-size: 1.2rem;
+        transition: transform 0.5s ease;
+    }
+
+    [data-theme="light"] .aurora-shape {
+        opacity: 0.1;
+    }
+
+    [data-theme="light"] .text-white {
+        color: var(--primary-color) !important;
+    }
+
+    [data-theme="light"] .text-gray-300,
+    [data-theme="light"] .text-gray-400 {
+        color: var(--secondary-color) !important;
+    }
+
+    [data-theme="light"] .bg-gray-900 {
+        background-color: var(--input-bg) !important;
+    }
+
+    [data-theme="light"] .border-gray-800 {
+        border-color: var(--input-border) !important;
+    }
+
+    [data-theme="light"] #intro-modal {
+        background: var(--bg-color);
+    }
     </style>
+    <script>
+        // Apply theme immediately to prevent flash
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
 </head>
 <body class="antialiased">
+    <!-- Cursor elements at top for sibling selector access -->
+    <div id="cursor"></div>
+    <div id="cursor-follower"></div>
+
+    <div id="scroll-progress"></div>
+
     <!-- Intro Loader Modal -->
     <div id="intro-modal">
-        <h1 class="intro-text">
+        <h1 class="intro-text reveal reveal-up">
             Nero
             <span class="strike"></span>
         </h1>
@@ -369,20 +604,25 @@ p:hover ~ #cursor-follower {
     <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#hero" class="text-2xl font-bold tracking-wider">Nero<span class="text-blue-500">.</span></a>
-            <nav class="hidden md:flex space-x-8">
-                <a href="#about" class="nav-link text-gray-300 hover:text-blue-500 transition-colors">About</a>
-                <a href="#skills" class="nav-link text-gray-300 hover:text-blue-500 transition-colors">Skills</a>
-                <a href="#projects" class="nav-link text-gray-300 hover:text-blue-500 transition-colors">Projects</a>
-                <a href="#contact" class="nav-link text-gray-300 hover:text-blue-500 transition-colors">Contact</a>
-            </nav>
-            <button id="mobile-menu-btn" class="md:hidden z-50">
-                <i class="fa-solid fa-bars text-white text-2xl"></i>
-            </button>
+            <div class="flex items-center space-x-6">
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#about" class="nav-link text-gray-300 hover:text-blue-500 transition-colors">About</a>
+                    <a href="#skills" class="nav-link text-gray-300 hover:text-blue-500 transition-colors">Skills</a>
+                    <a href="#projects" class="nav-link text-gray-300 hover:text-blue-500 transition-colors">Projects</a>
+                    <a href="#contact" class="nav-link text-gray-300 hover:text-blue-500 transition-colors">Contact</a>
+                </nav>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button id="mobile-menu-btn" class="md:hidden z-50">
+                    <i class="fa-solid fa-bars text-white text-2xl"></i>
+                </button>
+            </div>
         </div>
     </header>
 
     <!-- Mobile Menu -->
-    <div id="mobile-menu" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-90 backdrop-blur-sm z-40 hidden flex-col justify-center items-center">
+    <div id="mobile-menu" class="fixed top-0 left-0 w-full h-full z-40 hidden flex-col justify-center items-center" style="background: var(--mobile-menu-bg); backdrop-filter: blur(10px);">
         <nav class="flex flex-col space-y-8 text-center text-2xl">
             <a href="#about" class="mobile-nav-link text-gray-300">About</a>
             <a href="#skills" class="mobile-nav-link text-gray-300">Skills</a>
@@ -396,15 +636,15 @@ p:hover ~ #cursor-follower {
         <!-- Hero Section -->
         <section id="hero" class="min-h-screen flex flex-col justify-center items-start">
             <div class="max-w-3xl">
-                <p class="text-lg text-blue-400 mb-2 font-mono">Hi, my name is</p>
-                <h1 class="text-5xl md:text-7xl font-bold text-white mb-4">Daniel Oghenero.</h1>
-                <h2 class="text-4xl md:text-6xl font-bold text-gray-400 mb-6">
+                <p class="text-lg text-blue-400 mb-2 font-mono reveal reveal-left">Hi, my name is</p>
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-4 reveal reveal-left" style="transition-delay: 0.1s;">Daniel Oghenero.</h1>
+                <h2 class="text-4xl md:text-6xl font-bold text-gray-400 mb-6 reveal reveal-left" style="transition-delay: 0.2s;">
                     <span id="typewriter"></span><span class="typewriter-cursor"></span>
                 </h2>
-                <p class="text-gray-300 max-w-xl mb-8">
+                <p class="text-gray-300 max-w-xl mb-8 reveal reveal-up" style="transition-delay: 0.3s;">
                     I'm a versatile Full-Stack Developer specializing in building robust, end-to-end digital solutions. From crafting high-performance user interfaces to architecting scalable backend systems, I bring ideas to life across the entire stack.
                 </p>
-                <a href="#contact" class="cta-button group px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg shadow-blue-600/30 inline-flex items-center space-x-2">
+                <a href="#contact" class="cta-button group px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg shadow-blue-600/30 inline-flex items-center space-x-2 reveal reveal-up" style="transition-delay: 0.4s;">
                     <span>Get In Touch</span>
                     <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                 </a>
@@ -415,7 +655,7 @@ p:hover ~ #cursor-follower {
         <section id="about" class="py-20 md:py-32 section-hidden">
             <h2 class="text-4xl font-bold text-center mb-12">About Me</h2>
             <div class="grid md:grid-cols-5 gap-10 items-center">
-                <div class="md:col-span-3 text-gray-300 space-y-4 text-lg">
+                <div class="md:col-span-3 text-gray-300 space-y-4 text-lg reveal reveal-left">
                     <p>
                         Hello! I'm Nero, a Full-Stack Developer with a passion for bridging the gap between elegant design and complex functionality. What started as Curiosity in 2023 evolved into an obsession with building comprehensive web systems.
                     </p>
@@ -426,7 +666,7 @@ p:hover ~ #cursor-follower {
                         When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or enjoying a good cup of coffee.
                     </p>
                 </div>
-                <div class="md:col-span-2 flex justify-center">
+                <div class="md:col-span-2 flex justify-center reveal reveal-right">
                     <div class="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden relative group border-4 border-blue-500/50">
                         <img src="https://i.pinimg.com/1200x/0f/ae/04/0fae04c2b8cd52e0ee6b3fb4c254bb21.jpg" alt="Daniel Nero" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
                         <div class="absolute inset-0 bg-blue-600/30 group-hover:bg-transparent transition-all duration-500"></div>
@@ -437,8 +677,8 @@ p:hover ~ #cursor-follower {
 
         <!-- Skills Section -->
         <section id="skills" class="py-20 md:py-32 section-hidden">
-            <h2 class="text-4xl font-bold text-center mb-16">My Tech Stack</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16 reveal reveal-up">My Tech Stack</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 max-w-4xl mx-auto reveal reveal-stagger">
                 <div class="flex flex-col items-center p-4 glass-card rounded-lg">
                     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" class="h-16 w-16 mb-2" alt="HTML5 Icon" />
                     <span class="font-semibold">HTML5</span>
@@ -505,8 +745,8 @@ p:hover ~ #cursor-follower {
 
         <!-- Projects Section -->
         <section id="projects" class="py-20 md:py-32 section-hidden">
-            <h2 class="text-4xl font-bold text-center mb-16">Featured Projects</h2>
-            <div id="projects-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <h2 class="text-4xl font-bold text-center mb-16 reveal reveal-up">Featured Projects</h2>
+            <div id="projects-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 reveal reveal-scale">
                 <!-- Projects will be loaded from the backend -->
                 <div class="col-span-full text-center py-20">
                     <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
@@ -516,12 +756,25 @@ p:hover ~ #cursor-follower {
 
         <!-- Contact Section -->
         <section id="contact" class="py-20 md:py-32 section-hidden">
-            <h2 class="text-4xl font-bold text-center mb-4">Get In Touch</h2>
-            <p class="max-w-xl mx-auto text-gray-400 mb-12 text-center">
+            <h2 class="text-4xl font-bold text-center mb-4 reveal reveal-up">Get In Touch</h2>
+            <p class="max-w-xl mx-auto text-gray-400 mb-12 text-center reveal reveal-up" style="transition-delay: 0.1s;">
                 I'm currently open to new opportunities and collaborations. Whether you have a question or just want to say hi, my inbox is always open.
             </p>
             
-            <div class="max-w-2xl mx-auto glass-card p-8 rounded-2xl">
+            <div class="max-w-2xl mx-auto glass-card p-8 rounded-2xl reveal reveal-scale relative overflow-hidden" style="transition-delay: 0.2s;">
+                <!-- Success Overlay -->
+                <div id="form-success-overlay" class="form-success-overlay">
+                    <button id="close-success-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors" title="Close">
+                        <i class="fa-solid fa-xmark text-2xl"></i>
+                    </button>
+                    <div class="checkmark-circle">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Message Sent!</h3>
+                    <p class="text-gray-400 text-center">Thank you for reaching out. I'll get back to you shortly.</p>
+                    <button id="reset-form-btn" class="mt-8 text-blue-400 hover:text-blue-300 font-semibold underline">Send another message</button>
+                </div>
+
                 <form id="contact-form" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="flex flex-col text-left">
@@ -588,16 +841,57 @@ p:hover ~ #cursor-follower {
                 cursor.style.top = mouseY + "px";
             });
 
-            function animateFollower() {
-                followerX += (mouseX - followerX) * 0.12;
-                followerY += (mouseY - followerY) * 0.12;
+            // Reliable Hover Interaction for Desktop
+            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+                const interactiveElements = document.querySelectorAll('a, button, input[type="submit"], input[type="button"], .theme-toggle');
+                
+                interactiveElements.forEach(el => {
+                    el.addEventListener('mouseenter', () => {
+                        follower.classList.add('cursor-hover');
+                        cursor.classList.add('cursor-hover');
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        follower.classList.remove('cursor-hover');
+                        cursor.classList.remove('cursor-hover');
+                    });
+                });
+            }
 
-                follower.style.left = followerX + "px";
-                follower.style.top = followerY + "px";
+            function animateFollower() {
+                // Only run on desktop/hover devices
+                if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+                    followerX += (mouseX - followerX) * 0.12;
+                    followerY += (mouseY - followerY) * 0.12;
+
+                    follower.style.left = followerX + "px";
+                    follower.style.top = followerY + "px";
+                }
 
                 requestAnimationFrame(animateFollower);
             }
             animateFollower();
+
+            // Theme Switcher Logic
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            // Set initial icon state
+            if (document.documentElement.getAttribute('data-theme') === 'light') {
+                themeIcon.className = 'fa-solid fa-sun';
+            }
+
+            themeToggle.addEventListener('click', () => {
+                const theme = document.documentElement.getAttribute('data-theme');
+                if (theme === 'light') {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'dark');
+                    themeIcon.className = 'fa-solid fa-moon';
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    localStorage.setItem('theme', 'light');
+                    themeIcon.className = 'fa-solid fa-sun';
+                }
+            });
             // ===== Intro Modal Control =====
             const introModal = document.getElementById("intro-modal");
 
@@ -680,6 +974,42 @@ p:hover ~ #cursor-follower {
             type();
 
             // Section Reveal on Scroll
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Optional: unobserve if you only want it to happen once
+                        // revealObserver.unobserve(entry.target);
+                    } else {
+                        // Optional: remove class to repeat animation when scrolling back
+                        // entry.target.classList.remove('active');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            revealElements.forEach(el => revealObserver.observe(el));
+
+            // Scroll Progress Bar Logic
+            const progressBar = document.getElementById('scroll-progress');
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                progressBar.style.width = scrolled + "%";
+                
+                // Header Scroll Effect
+                if (window.scrollY > 50) {
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
+                }
+            });
+
+            // Section Reveal on Scroll (Legacy compatibility for section-hidden)
             const sections = document.querySelectorAll('.section-hidden');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -743,7 +1073,7 @@ p:hover ~ #cursor-follower {
                         projectElement.setAttribute('data-tilt', '');
                         
                         const tagsHtml = project.tags.map(tag => 
-                            `<span class="bg-gray-700 text-xs font-semibold px-2 py-1 rounded-full">${tag}</span>`
+                            `<span class="text-xs font-semibold px-2 py-1 rounded-full" style="background: var(--border-color); color: var(--secondary-color)">${tag}</span>`
                         ).join('');
 
                         projectElement.innerHTML = `
@@ -784,17 +1114,35 @@ p:hover ~ #cursor-follower {
             const contactForm = document.getElementById('contact-form');
             const submitBtn = document.getElementById('submit-btn');
             const formStatus = document.getElementById('form-status');
+            const successOverlay = document.getElementById('form-success-overlay');
+            const resetBtn = document.getElementById('reset-form-btn');
+            const closeSuccessBtn = document.getElementById('close-success-btn');
+
+            const resetFormDisplay = () => {
+                successOverlay.classList.remove('active');
+                submitBtn.classList.remove('btn-success', 'pop');
+                submitBtn.disabled = false;
+                const planeIcon = submitBtn.querySelector('i');
+                planeIcon.classList.remove('fly');
+                submitBtn.querySelector('span').textContent = 'Send Message';
+                formStatus.classList.add('hidden');
+            };
 
             contactForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
-                // Reset status
-                formStatus.classList.remove('hidden', 'text-green-500', 'text-red-500');
-                formStatus.textContent = '';
+                const planeIcon = submitBtn.querySelector('i');
+                const btnText = submitBtn.querySelector('span');
                 
-                submitBtn.disabled = true;
-                const originalBtnContent = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<span>Sending...</span><div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>';
+                // Start "Fly Away" Animation
+                planeIcon.classList.add('fly');
+                
+                // Wait for fly animation to start before changing state
+                setTimeout(() => {
+                    submitBtn.disabled = true;
+                    btnText.textContent = 'Sending...';
+                    submitBtn.insertAdjacentHTML('beforeend', '<div class="btn-loader ml-2 animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>');
+                }, 400);
 
                 const formData = {
                     name: document.getElementById('name').value,
@@ -805,36 +1153,46 @@ p:hover ~ #cursor-follower {
                 try {
                     const response = await fetch('/api/contact', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(formData)
                     });
 
                     const result = await response.json();
 
                     if (response.ok) {
-                        formStatus.textContent = result.message;
-                        formStatus.classList.add('text-green-500', 'block');
-                        contactForm.reset();
+                        // Success Animation Following
+                        submitBtn.classList.add('btn-success', 'pop');
+                        btnText.textContent = 'Sent!';
+                        const loader = submitBtn.querySelector('.btn-loader');
+                        if (loader) loader.remove();
+                        
+                        // Show Success Overlay
+                        setTimeout(() => {
+                            successOverlay.classList.add('active');
+                            contactForm.reset();
+                        }, 1000);
                     } else {
-                        formStatus.textContent = result.error || 'Something went wrong. Please try again.';
-                        formStatus.classList.add('text-red-500', 'block');
+                        throw new Error(result.error || 'Submission failed');
                     }
                 } catch (error) {
                     console.error('Error submitting form:', error);
-                    formStatus.textContent = 'Failed to connect to the server. Please check your internet.';
+                    formStatus.textContent = error.message;
                     formStatus.classList.add('text-red-500', 'block');
-                } finally {
+                    formStatus.classList.remove('hidden');
+                    
+                    // Reset button state on error
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalBtnContent;
+                    btnText.textContent = 'Send Message';
+                    planeIcon.classList.remove('fly');
+                    const loader = submitBtn.querySelector('.btn-loader');
+                    if (loader) loader.remove();
                 }
             });
+
+            resetBtn.addEventListener('click', resetFormDisplay);
+            closeSuccessBtn.addEventListener('click', resetFormDisplay);
         });
     </script>
-    <div id="cursor"></div>
-    <div id="cursor-follower"></div>
-
     <a href="https://wa.me/2348069132153" target="_blank" class="whatsapp-fixed" title="Chat with me on WhatsApp">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
